@@ -35,15 +35,13 @@ public class JFinalModelAutoGenerator {
 		
 		// 创建生成器
 		Generator generator = new Generator(getDataSource(), baseModelPackageName, baseModelOutputDir, modelPackageName, modelOutputDir);
-		// 设置是否生成链式 setter 方法
-		generator.setGenerateChainSetter(false);
 		// 添加不需要生成的表名
-		generator.addExcludedTable("adv");
+		generator.addExcludedTable("test");
 		// 设置是否在 Model 中生成 dao 对象
 		generator.setGenerateDaoInModel(true);
-		// 设置是否生成链式 setter 方法
+		// 设置是否生成链式 setter 方法，即set方法返回当前对象而不是void
 		generator.setGenerateChainSetter(true);
-		// 设置是否生成字典文件
+		// 设置是否生成字典文件,即数据库字段说明文件
 		generator.setGenerateDataDictionary(false);
 		// 设置需要被移除的表名前缀用于生成modelName。例如表名 "osc_user"，移除前缀 "osc_"后生成的model名为 "User"而非 OscUser
 		generator.setRemovedTableNamePrefixes("xgq_");

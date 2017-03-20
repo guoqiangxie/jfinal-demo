@@ -20,7 +20,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `xgq_user`;
 CREATE TABLE `xgq_user` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT '名字',
   `age` int(3) DEFAULT NULL COMMENT '年龄',
   `nick_name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '昵称',

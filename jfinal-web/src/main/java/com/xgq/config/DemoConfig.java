@@ -11,6 +11,7 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.render.ViewType;
 import com.jfinal.template.Engine;
+import com.xgq.common.model._MappingKit;
 import com.xgq.controller.HelloController;
 
 /**
@@ -55,7 +56,8 @@ public class DemoConfig extends JFinalConfig {
         ActiveRecordPlugin arp = new ActiveRecordPlugin(druidPlugin);
         plugins.add(arp);
 
-
+        //_MappingKit 将所有的model映射加入
+        _MappingKit.mapping(arp);
     }
 
     @Override

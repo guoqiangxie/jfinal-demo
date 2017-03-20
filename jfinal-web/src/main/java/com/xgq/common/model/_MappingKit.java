@@ -16,6 +16,7 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 public class _MappingKit {
 
 	public static void mapping(ActiveRecordPlugin arp) {
+		//表名，主键名(不填时默认为id)，Model做映射
 		arp.addMapping("xgq_user", "id", User.class);
 	}
 }

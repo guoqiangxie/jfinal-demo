@@ -9,10 +9,13 @@ import com.jfinal.config.Routes;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
+import com.jfinal.plugin.redis.RedisPlugin;
+import com.jfinal.plugin.redis.serializer.ISerializer;
 import com.jfinal.render.ViewType;
 import com.jfinal.template.Engine;
 import com.xgq.common.model._MappingKit;
 import com.xgq.controller.HelloController;
+import redis.clients.util.SafeEncoder;
 
 /**
  * Created by xieguoqiang on 2017/3/15.
@@ -22,7 +25,8 @@ public class DemoConfig extends JFinalConfig {
     //该方法用于初始化系统部分全局参数，如设置是否为开发模式、编码格式、视图解析、URL参数分隔符、POST请求参数大小等等。
     @Override
     public void configConstant(Constants constants) {
-        PropKit.use("jdbc.properties"); //读取配置文件，项目内不需要指定路径 PropKit.get 直接调用
+        PropKit.use("config.properties"); //读取配置文件，项目内不需要指定路径 PropKit.get 直接调用.jfinal暂时只支持读取一个配置文件
+
         constants.setDevMode(true); //开发模式设置，默认false。如果将其设置为开发模式，则在前台每次发送URL请求时都会输入报告
         constants.setEncoding("UTF-8"); //编码格式：默认编码格式为UTF-8
         constants.setViewType(ViewType.JSP); //视图解析：默认视图解析为FreeMaker（其扩展名为ftl，但在JFinal里用html作为FreeMarker视图解析的扩展名），JFinal支持三种视图解析JSP，FREE_MARKER，VELOCITY，也可以扩展解析视图，视图解析用于设置render解析视图的类型，如果设置视图解析为JSP，则对于render的视图里包含freemarker标签则无法解析。
@@ -55,9 +59,43 @@ public class DemoConfig extends JFinalConfig {
         // 配置ActiveRecord插件
         ActiveRecordPlugin arp = new ActiveRecordPlugin(druidPlugin);
         plugins.add(arp);
-
         //_MappingKit 将所有的model映射加入
         _MappingKit.mapping(arp);
+
+        //cache名，可以配置不同名的多个，第一个配置的为默认，使用时不指定名字默认用第一个；cache host；cache port
+        RedisPlugin redisPlugin = new RedisPlugin("defaultCache", PropKit.get("redis.host"), PropKit.getInt("redis.port"));
+
+        //设置自己的序列化替换默认的fst序列化
+        redisPlugin.setSerializer(new ISerializer() {
+            @Override
+            public byte[] keyToBytes(String key) {
+                return SafeEncoder.encode(key);
+            }
+            @Override
+            public String keyFromBytes(byte[] bytes) {
+                return SafeEncoder.encode(bytes);
+            }
+            @Override
+            public byte[] fieldToBytes(Object field) {
+                return valueToBytes(field);
+            }
+            @Override
+            public Object fieldFromBytes(byte[] bytes) {
+                return valueFromBytes(bytes);
+            }
+            @Override
+            public byte[] valueToBytes(Object value) {
+                return SafeEncoder.encode(value.toString());
+            }
+            @Override
+            public Object valueFromBytes(byte[] bytes) {
+                if(bytes == null || bytes.length == 0)
+                    return null;
+                return SafeEncoder.encode(bytes);
+            }
+        });
+
+        plugins.add(redisPlugin);
     }
 
     @Override

@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 public class JFinalModelAutoGenerator {
 	
 	public static DataSource getDataSource() {
-		PropKit.use("jdbc.properties");
+		PropKit.use("config.properties");
 		DruidPlugin druidPlugin = new DruidPlugin(PropKit.get("jdbc.url"), PropKit.get("jdbc.user"), PropKit.get("jdbc.password"));
 		druidPlugin.start();
 		return druidPlugin.getDataSource();

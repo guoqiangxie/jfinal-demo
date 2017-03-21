@@ -1,1 +1,5 @@
 1. maven依赖的数据库连接，不能高于5.1.41，否则会报一些ssl、时区、表名为空等乱七八糟的错误
+2. 引入druid、mysql、redis时，要同时加入maven依赖
+3. jfinal redisplugin默认支持fst序列化反序列化，读取其他形式存入的数据报错；
+    所以在config中配置自己实现的序列化替换默认的序列化以支持读取jedis存入的数据
+4. jfinal 目前只支持读取一个配置文件 PropKit.use("config.properties")
